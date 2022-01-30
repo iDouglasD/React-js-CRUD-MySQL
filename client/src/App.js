@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Axios from "axios";
+import Card from "./components/Card";
 
 function App() {
     const [values, setValues] = useState();
+    const [listGames, setListGames] = useState();
 
     const valuesChangeHandler = (value) => {
         setValues((prevValues) => ({
@@ -11,6 +13,12 @@ function App() {
             [value.target.name]: value.target.value,
         }));
     };
+
+    useEffect(() => {
+        Axios.get("http://localhost:3001/getCards").then((response) => {
+            setListGames(response.data);
+        });
+    }, []);
 
     const registerChangeHandler = () => {
         Axios.post("http://localhost:3001/register", {
@@ -53,6 +61,10 @@ function App() {
                     Cadastrar
                 </button>
             </div>
+            {typeof listGames !== "undefined" &&
+                listGames.map((value) => {
+                    return <Card />;
+                })}
         </div>
     );
 }
