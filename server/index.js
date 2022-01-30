@@ -1,12 +1,19 @@
 const express = require("express");
 const db = require("./data/database");
 const app = express();
+const cors = require("cors");
 
-app.get("/", (req, res) => {
-    const query =
-        "INSERT INTO games(name, cost, category) VALUES ('far cry', '125', 'Ação')";
+app.use(cors());
+app.use(express.json());
 
-    db.query(query, (err, result) => {
+app.post("/register", (req, res) => {
+    const { name } = req.body;
+    const { cost } = req.body;
+    const { category } = req.body;
+
+    let SQL = "INSERT INTO games (name, cost, category) VALUES (?,?,?)";
+
+    db.query(SQL, [name, cost, category], (err, result) => {
         console.log(err);
     });
 });
